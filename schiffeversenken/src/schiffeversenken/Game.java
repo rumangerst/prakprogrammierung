@@ -7,6 +7,7 @@ package schiffeversenken;
 
 import java.awt.Point;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -19,6 +20,12 @@ public class Game
 
 	static Random RANDOM = new Random();
 	static final boolean GAME_OUTPUT_SLEEP = false;
+	
+	//Some directions
+	static final int DIR_EAST = 0;
+	static final int DIR_SOUTH = 1;
+	static final int DIR_WEST = 2;
+	static final int DIR_NORTH = 3;
 
 	// Field arrays
 	int[][] field_player1; // Ships of player 1, value is ship id
@@ -381,90 +388,115 @@ public class Game
 			throws InvalidParameterException
 	{
 		Point indices = Game.getFieldStringIndices(position);
+		
+		ArrayList<Integer> validdirections = new ArrayList<>();
 
 		// Find a orientation, suitable for the field
 		// Step 1: basic check
-		boolean orient_can_east = (indices.x + length) <= 10;
-		boolean orient_can_south = (indices.y + length) <= 10;
-		boolean orient_can_west = (indices.x - length) >= 0;
-		boolean orient_can_north = (indices.y - length) >= 0;
-
-		// Step 2: existing check (checks for existing ships)
-		if (orient_can_east)
+		if((indices.x + length) <= 10)
 		{
+			boolean valid = true;
+			
 			for (int x = indices.x; x < indices.x + length; x++)
 			{
 				if (!Game.fieldIsSuitableForShip(field, x, indices.y))
 				{
-					orient_can_east = false;
+					valid = false;
 					break;
 				}
 			}
+			
+			if(valid)
+				validdirections.add(DIR_EAST);
 		}
-		if (orient_can_south)
+		if ((indices.y + length) <= 10)
 		{
+			boolean valid = true;
+			
 			for (int y = indices.y; y < indices.y + length; y++)
 			{
 				if (!Game.fieldIsSuitableForShip(field, indices.x, y))
 				{
-					orient_can_south = false;
+					valid = false;
 					break;
 				}
 			}
+			
+			if(valid)
+			validdirections.add(DIR_SOUTH);
 		}
-		if (orient_can_west)
+		if ((indices.x - length + 1) >= 0)
 		{
-			for (int x = indices.x; x > indices.x - length; x--)
+			boolean valid = true;
+			
+			for (int x = indices.x; x >= indices.x - length + 1; x--)
 			{
 				if (!Game.fieldIsSuitableForShip(field, x, indices.y))
 				{
-					orient_can_west = false;
+					valid = false;
 					break;
 				}
 			}
+			
+			if(valid)
+			validdirections.add(DIR_WEST);
 		}
-		if (orient_can_north)
+		if ((indices.y - length + 1) >= 0)
 		{
-			for (int y = indices.y; y > indices.y - length; y--)
+			boolean valid = true;
+			
+			for (int y = indices.y; y >= indices.y - length + 1; y--)
 			{
 				if (!Game.fieldIsSuitableForShip(field, indices.x, y))
 				{
-					orient_can_north = false;
+					valid = false;
 					break;
 				}
 			}
-		}
+			
+			if(valid)
+			validdirections.add(DIR_NORTH);
+		}	
 
 		// Check if both are invalid
-		if (!orient_can_east && !orient_can_south && !orient_can_west && !orient_can_north)
+		if (validdirections.isEmpty())
 		{
-			throw new InvalidParameterException("UngÃ¼ltige Position!"); // throw
+			throw new InvalidParameterException("Ungültige Position!"); // throw
 		}
 
 		// If both are valid, randomize them
-		if (orient_can_south && orient_can_east)
-		{
-			orient_can_south = Game.RANDOM.nextBoolean();
-			orient_can_east = !orient_can_south;
-		}
+		int randomdir = validdirections.get(RANDOM.nextInt(validdirections.size()));
 
 		// Here, only one value is valid
-		if (orient_can_east)
+		switch (randomdir)
 		{
+		case DIR_EAST:
 			for (int x = indices.x; x < indices.x + length; x++)
 			{
 				field[x][indices.y] = shipindices[playerid]; // Set to ship
 																// index
 			}
-		}
-		else if(orient_can_south)
-		{
+			break;
+		case DIR_SOUTH:
 			for (int y = indices.y; y < indices.y + length; y++)
 			{
 				field[indices.x][y] = shipindices[playerid];
 			}
+			break;
+		case DIR_WEST:
+			for (int x = indices.x; x >= indices.x - length + 1; x--)
+			{
+				field[x][indices.y] = shipindices[playerid];
+			}
+			break;
+		case DIR_NORTH:
+			for (int y = indices.y; y >= indices.y - length + 1; y--)
+			{
+				field[indices.x][y] = shipindices[playerid];
+			}
+			break;
 		}
-
+		
 		// Add ship index
 		shipindices[playerid] = shipindices[playerid] + 1;
 

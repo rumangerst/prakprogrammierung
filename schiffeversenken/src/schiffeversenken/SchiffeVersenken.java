@@ -19,7 +19,7 @@ public class SchiffeVersenken
     public static void main(String[] args)
     {
         Game game = new Game();
-        game.startGame(true,true); //start game with two random "AI"
+        game.startGame(false,false); //start game with two random "AI"
     }
     
 }
