@@ -26,13 +26,18 @@ public class Game
 	static final int DIR_SOUTH = 1;
 	static final int DIR_WEST = 2;
 	static final int DIR_NORTH = 3;
+	
+	//Size
+	static final int FIELD_SIZE = 10;
 
 	// Field arrays
-	int[][] field_player1; // Ships of player 1, value is ship id
+	int[][][] fields;
+	int[][][] shots;
+	/*int[][] field_player1; // Ships of player 1, value is ship id
 	int[][] field_player2; // Ships of player 2, value is ship id
 
 	int[][] shots_player1; // Moves of player 1, 0=not shot, 1=not hit, 2=hit
-	int[][] shots_player2; // Moves of player 2, 0=not shot, 1=not hit, 2=hit
+	int[][] shots_player2; // Moves of player 2, 0=not shot, 1=not hit, 2=hit*/
 
 	// Player ship variables
 	int[] shipindices;
@@ -42,10 +47,14 @@ public class Game
 
 	public Game()
 	{
-		field_player1 = new int[10][10];
+		
+		/*field_player1 = new int[10][10];
 		field_player2 = new int[10][10];
 		shots_player1 = new int[10][10];
-		shots_player2 = new int[10][10];
+		shots_player2 = new int[10][10];*/
+		
+		fields = new int[][][] {new int[FIELD_SIZE][FIELD_SIZE], new int[FIELD_SIZE][FIELD_SIZE]};
+		shots = new int[][][] {new int[FIELD_SIZE][FIELD_SIZE], new int[FIELD_SIZE][FIELD_SIZE]};
 
 		shipindices = new int[] { 1, 1 };
 
@@ -66,8 +75,8 @@ public class Game
 
 		// ///////////////////////////////////////////////////////////// Phase
 		// 1: Adding ships
-		playerAddShips(scanner, player1ai, "Spieler 1", 0, field_player1);
-		playerAddShips(scanner, player2ai, "Spieler 2", 1, field_player2);
+		playerAddShips(scanner, player1ai, "Spieler 1", 0);
+		playerAddShips(scanner, player2ai, "Spieler 2", 1);
 
 		// ///////////////////////////////////////////////////////////// Phase
 		// 2: Shooting ships
@@ -94,13 +103,11 @@ public class Game
 
 				if (isplayer1)
 				{
-					validvalue = playerturn(scanner, "Spieler 1", player1ai,
-							field_player2, shots_player1);
+					validvalue = playerturn(scanner, "Spieler 1", player1ai, 0, 1);
 				}
 				else
 				{
-					validvalue = playerturn(scanner, "Spieler 2", player2ai,
-							field_player1, shots_player2);
+					validvalue = playerturn(scanner, "Spieler 2", player2ai, 1, 0);
 				}
 			}
 			while (!validvalue);
@@ -108,8 +115,8 @@ public class Game
 			isplayer1 = !isplayer1; // swap players
 
 			// refresh won status
-			player1won = playerwon(field_player2);
-			player2won = playerwon(field_player1);
+			player1won = playerwon(0);
+			player2won = playerwon(1);
 		}
 
 		// ///////////////////////////////////////////////////////////// Phase
@@ -159,9 +166,11 @@ public class Game
 	 * @param ai
 	 * @return
 	 */
-	boolean playerturn(Scanner scanner, String name, boolean ai,
-			int[][] enemyfield, int[][] shots)
+	boolean playerturn(Scanner scanner, String name, boolean ai, int playerid, int enemyid)
 	{
+		int[][] shots = this.shots[playerid];
+		int[][] enemyfield = this.fields[playerid];
+		
 		System.out.printf("####********* %s *********####", name);
 		System.out.println();
 
@@ -260,9 +269,10 @@ public class Game
 	 * @param ai
 	 *            Add random ships
 	 */
-	void playerAddShips(Scanner scanner, boolean ai, String name, int playerid,
-			int[][] field)
+	void playerAddShips(Scanner scanner, boolean ai, String name, int playerid)
 	{
+		int[][] field = this.fields[playerid];
+		
 		System.out.printf("#### %s ####", name);
 		System.out.println();
 
@@ -272,7 +282,7 @@ public class Game
 			{
 				Game.drawFieldBoolean(field); // Draw field 1x
 
-				System.out.println("Platziere ein Schiff der LÃ¤nge "
+				System.out.println("Platziere ein Schiff der Länge "
 						+ placedships[i]);
 				System.out.println("Dieses Schiff positionieren auf Feld = ?");
 			}
@@ -319,11 +329,13 @@ public class Game
 	 *            Field of OTHER player to check if empty
 	 * @return
 	 */
-	boolean playerwon(int[][] enemyfield)
+	boolean playerwon(int enemyid)
 	{
-		for (int x = 0; x < 10; x++)
+		int[][] enemyfield = this.fields[enemyid];
+		
+		for (int x = 0; x < FIELD_SIZE; x++)
 		{
-			for (int y = 0; y < 10; y++)
+			for (int y = 0; y < FIELD_SIZE; y++)
 			{
 				if (enemyfield[x][y] != 0)
 				{
@@ -356,9 +368,9 @@ public class Game
 		if (shiptype != 0)
 		{
 			// Append to arrays (delete ships, refresh player's "shot" view)
-			for (int x = 0; x < 10; x++)
+			for (int x = 0; x < FIELD_SIZE; x++)
 			{
-				for (int y = 0; y < 10; y++)
+				for (int y = 0; y < FIELD_SIZE; y++)
 				{
 					if (enemyfield[x][y] == shiptype)
 					{
@@ -393,7 +405,7 @@ public class Game
 
 		// Find a orientation, suitable for the field
 		// Step 1: basic check
-		if((indices.x + length) <= 10)
+		if((indices.x + length) <= FIELD_SIZE)
 		{
 			boolean valid = true;
 			
@@ -409,7 +421,7 @@ public class Game
 			if(valid)
 				validdirections.add(DIR_EAST);
 		}
-		if ((indices.y + length) <= 10)
+		if ((indices.y + length) <= FIELD_SIZE)
 		{
 			boolean valid = true;
 			
@@ -510,8 +522,8 @@ public class Game
 	 */
 	static String randomPos()
 	{
-		char x = (char) ('A' + RANDOM.nextInt(10));
-		int y = RANDOM.nextInt(10);
+		char x = (char) ('A' + RANDOM.nextInt(FIELD_SIZE));
+		int y = RANDOM.nextInt(FIELD_SIZE);
 
 		return x + "" + y;
 	}
@@ -533,7 +545,7 @@ public class Game
 		{
 			for (int cy = y - 1; cy <= y + 1; cy++)
 			{
-				if (cx < 0 || cy < 0 || cx > 9 || cy > 9)
+				if (cx < 0 || cy < 0 || cx >= FIELD_SIZE || cy >= FIELD_SIZE)
 					continue;
 
 				if (field[cx][cy] == 2) // if sunken ship next to it => no!
@@ -553,14 +565,14 @@ public class Game
 	static boolean fieldIsSuitableForShip(int[][] field, int x, int y)
 	{
 		//check if x,y are still in field
-		if(x < 0 || y < 0 || x > 9 || y > 9)
+		if(x < 0 || y < 0 || x >= FIELD_SIZE || y >= FIELD_SIZE)
 			return false;
 		
 		for (int cx = x - 1; cx <= x + 1; cx++)
 		{
 			for (int cy = y - 1; cy <= y + 1; cy++)
 			{
-				if (cx < 0 || cy < 0 || cx > 9 || cy > 9)
+				if (cx < 0 || cy < 0 || cx >= FIELD_SIZE || cy >= FIELD_SIZE)
 					continue; //doesn't matter for sourrounding fields
 
 				if (field[cx][cy] != 0)
@@ -578,30 +590,44 @@ public class Game
 	 */
 	static void drawFieldShot(int[][] field)
 	{
-		System.out.println("* 0 1 2 3 4 5 6 7 8 9");
+		//System.out.println("* 0 1 2 3 4 5 6 7 8 9");
+		System.out.print("*  ");		
+		for(int i = 0; i < FIELD_SIZE; i++)
+		{
+			if(i < 10) 
+			{ 
+				System.out.print(i + "  "); 
+			}
+			else
+			{
+				System.out.print(i + " ");
+			}
+			
+		}		
+		System.out.println();
 
 		char row = 'A';
 
-		for (int y = 0; y < 10; y++)
+		for (int y = 0; y < FIELD_SIZE; y++)
 		{
-			System.out.print(row + " ");
+			System.out.print(row + "  ");
 
-			for (int x = 0; x < 10; x++)
+			for (int x = 0; x < FIELD_SIZE; x++)
 			{
 				switch (field[x][y])
 				{
 				case 1:
-					System.out.print("0 ");
+					System.out.print(".  ");
 					break;
 				case 2:
-					System.out.print("+ ");
+					System.out.print("x  ");
 					break;
 				default:
-					System.out.print("  ");
+					System.out.print("   ");
 					break;
 
-				}
-
+				}			
+			
 			}
 
 			row++;
@@ -617,17 +643,31 @@ public class Game
 	 */
 	static void drawFieldBoolean(int[][] field)
 	{
-		System.out.println("* 0 1 2 3 4 5 6 7 8 9");
-
+		//System.out.println("* 0 1 2 3 4 5 6 7 8 9");
+		System.out.print("*  ");		
+		for(int i = 0; i < FIELD_SIZE; i++)
+		{
+			if(i < 10) 
+			{ 
+				System.out.print(i + "  "); 
+			}
+			else
+			{
+				System.out.print(i + " ");
+			}
+		}		
+		System.out.println();
+		
+		
 		char row = 'A';
 
-		for (int y = 0; y < 10; y++)
+		for (int y = 0; y < FIELD_SIZE; y++)
 		{
-			System.out.print(row + " ");
+			System.out.print(row + "  ");
 
-			for (int x = 0; x < 10; x++)
+			for (int x = 0; x < FIELD_SIZE; x++)
 			{
-				System.out.print((field[x][y] != 0 ? "#" : " ") + " ");
+				System.out.print((field[x][y] != 0 ? "#" : " ") + "  ");				
 			}
 
 			System.out.println();
@@ -647,14 +687,27 @@ public class Game
 	{
 		position = position.toUpperCase(); // make upper
 
-		if (position.length() != 2)
+		if (position.length() != 2 && position.length() != 3)
 		{
 			throw new InvalidParameterException("Falsche Eingabe!");
 		}
 		char letter = position.charAt(0);
-		char number = position.charAt(1);
+		char digit_10;
+		char digit_one;
+		
+		//read source chars from input by checking the two cases
+		if(position.length() == 2)
+		{
+			digit_10 = '0';
+			digit_one = position.charAt(1);
+		}
+		else
+		{
+			digit_10 = position.charAt(1);
+			digit_one = position.charAt(2);
+		}
 
-		if (!Character.isLetter(letter) || !Character.isDigit(number)) // check
+		if (!Character.isLetter(letter) || !Character.isDigit(digit_one) || !Character.isDigit(digit_10)) // check
 																		// for
 																		// letter/digit
 		{
@@ -662,9 +715,13 @@ public class Game
 		}
 
 		int x = letter - 'A';
-		int y = Integer.parseInt(number + "");
+		
+		//a number >= 10 <100 consits of two parts: a * 10 + b
+		int y = Integer.parseInt(digit_10 + "") * 10 + Integer.parseInt(digit_one + "");
+		
+		
 
-		if (x < 0 || x > 9 || y < 0 || y > 9) // last check
+		if (x < 0 || x >= FIELD_SIZE || y < 0 || y >= FIELD_SIZE) // last check
 		{
 			throw new InvalidParameterException("Falsche Eingabe!");
 		}
