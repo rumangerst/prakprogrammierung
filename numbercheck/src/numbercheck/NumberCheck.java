@@ -138,15 +138,20 @@ public class NumberCheck
         do
         {
             _current = _current + reverseNumber(_current);
+            
+            if(_current < 0)
+            {
+            	return true; //owerflow
+            }
 
             if (isPalindrome(_current))
             {
                 return false;
             }
-        }
-        while (_current < 5000000);
+        }   
+        while (_current > 0);
 
-        return true;
+        return true; //owerflow
     }
 
     /**
@@ -268,7 +273,10 @@ public class NumberCheck
             checkNumber(i);
         }
         
-        //System.out.println(isHappy(19));
+        System.out.println(isLychrel(83));
+        
+             
+        long n = Long.parseLong("7284457130");
 
     }
 

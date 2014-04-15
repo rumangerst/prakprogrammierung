@@ -40,10 +40,10 @@ public class Game
 	int[][] shots_player2; // Moves of player 2, 0=not shot, 1=not hit, 2=hit*/
 
 	// Player ship variables
-	int[] shipindices;
+	int[] shipIndices;
 
 	// Ship placement list
-	int[] placedships;
+	int[] placedShips;
 
 	public Game()
 	{
@@ -56,9 +56,9 @@ public class Game
 		fields = new int[][][] {new int[FIELD_SIZE][FIELD_SIZE], new int[FIELD_SIZE][FIELD_SIZE]};
 		shots = new int[][][] {new int[FIELD_SIZE][FIELD_SIZE], new int[FIELD_SIZE][FIELD_SIZE]};
 
-		shipindices = new int[] { 1, 1 };
+		shipIndices = new int[] { 1, 1 };
 
-		placedships = new int[] // initialize ship list for players; may add
+		placedShips = new int[] // initialize ship list for players; may add
 								// more
 		{ 5, 4, 3, 2 };
 	}
@@ -276,14 +276,14 @@ public class Game
 		System.out.printf("#### %s ####", name);
 		System.out.println();
 
-		for (int i = 0; i < placedships.length; i++)
+		for (int i = 0; i < placedShips.length; i++)
 		{
 			if (!ai)
 			{
 				Game.drawFieldBoolean(field); // Draw field 1x
 
-				System.out.println("Platziere ein Schiff der Länge "
-						+ placedships[i]);
+				System.out.println("Platziere ein Schiff der Lï¿½nge "
+						+ placedShips[i]);
 				System.out.println("Dieses Schiff positionieren auf Feld = ?");
 			}
 
@@ -307,7 +307,7 @@ public class Game
 
 				try
 				{
-					placeShip(pos, placedships[i], field, playerid);
+					placeShip(pos, placedShips[i], field, playerid);
 				}
 				catch (InvalidParameterException ex)
 				{
@@ -473,7 +473,7 @@ public class Game
 		// Check if both are invalid
 		if (validdirections.isEmpty())
 		{
-			throw new InvalidParameterException("Ungültige Position!"); // throw
+			throw new InvalidParameterException("Ungï¿½ltige Position!"); // throw
 		}
 
 		// If both are valid, randomize them
@@ -485,32 +485,32 @@ public class Game
 		case DIR_EAST:
 			for (int x = indices.x; x < indices.x + length; x++)
 			{
-				field[x][indices.y] = shipindices[playerid]; // Set to ship
+				field[x][indices.y] = shipIndices[playerid]; // Set to ship
 																// index
 			}
 			break;
 		case DIR_SOUTH:
 			for (int y = indices.y; y < indices.y + length; y++)
 			{
-				field[indices.x][y] = shipindices[playerid];
+				field[indices.x][y] = shipIndices[playerid];
 			}
 			break;
 		case DIR_WEST:
 			for (int x = indices.x; x >= indices.x - length + 1; x--)
 			{
-				field[x][indices.y] = shipindices[playerid];
+				field[x][indices.y] = shipIndices[playerid];
 			}
 			break;
 		case DIR_NORTH:
 			for (int y = indices.y; y >= indices.y - length + 1; y--)
 			{
-				field[indices.x][y] = shipindices[playerid];
+				field[indices.x][y] = shipIndices[playerid];
 			}
 			break;
 		}
 		
 		// Add ship index
-		shipindices[playerid] = shipindices[playerid] + 1;
+		shipIndices[playerid] = shipIndices[playerid] + 1;
 
 	}
 
