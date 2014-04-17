@@ -122,7 +122,14 @@ public class NumberCheck
      */
     static boolean isPalindrome(int num)
     {
-        return num == reverseNumber(num);
+    	if(num == 0) //0 ist Sonderfall
+    		return true;
+    	if((num % 10) == 0) //Eine Zahl mit einer Null am Ende KANN kein Palindrom sein Bew: 550 != 055
+    		return false;
+    	
+    	int reverse = reverseNumber(num);
+    	
+        return num == reverse;
     }
 
     /**
@@ -138,6 +145,8 @@ public class NumberCheck
         do
         {
             _current = _current + reverseNumber(_current);
+            
+            //System.out.println(_current);
             
             if(_current < 0)
             {
@@ -273,11 +282,7 @@ public class NumberCheck
             checkNumber(i);
         }
         
-        System.out.println(isLychrel(83));
-        
-             
-        long n = Long.parseLong("7284457130");
-
+        System.out.println(isLychrel(196)); 
     }
 
 }
