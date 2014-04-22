@@ -282,7 +282,7 @@ public class NumberCheck
             checkNumber(i);
         }
         
-        System.out.println(isLychrel(196)); 
+       // System.out.println(isPrime(349)); 
     }
 
 }

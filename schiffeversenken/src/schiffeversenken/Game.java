@@ -32,12 +32,7 @@ public class Game
 
 	// Field arrays
 	int[][][] fields;
-	int[][][] shots;
-	/*int[][] field_player1; // Ships of player 1, value is ship id
-	int[][] field_player2; // Ships of player 2, value is ship id
-
-	int[][] shots_player1; // Moves of player 1, 0=not shot, 1=not hit, 2=hit
-	int[][] shots_player2; // Moves of player 2, 0=not shot, 1=not hit, 2=hit*/
+	int[][][] shots;	
 
 	// Player ship variables
 	int[] shipIndices;
@@ -47,12 +42,6 @@ public class Game
 
 	public Game()
 	{
-		
-		/*field_player1 = new int[10][10];
-		field_player2 = new int[10][10];
-		shots_player1 = new int[10][10];
-		shots_player2 = new int[10][10];*/
-		
 		fields = new int[][][] {new int[FIELD_SIZE][FIELD_SIZE], new int[FIELD_SIZE][FIELD_SIZE]};
 		shots = new int[][][] {new int[FIELD_SIZE][FIELD_SIZE], new int[FIELD_SIZE][FIELD_SIZE]};
 
@@ -282,7 +271,7 @@ public class Game
 			{
 				Game.drawFieldBoolean(field); // Draw field 1x
 
-				System.out.println("Platziere ein Schiff der L�nge "
+				System.out.println("Platziere ein Schiff der Länge "
 						+ placedShips[i]);
 				System.out.println("Dieses Schiff positionieren auf Feld = ?");
 			}
