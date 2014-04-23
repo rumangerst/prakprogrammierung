@@ -92,55 +92,78 @@ public class Rectangle extends Figure implements MobileObject
 	{
 		return getY() + getHeight();
 	}
-	
+
 	/**
 	 * Returns if the given point (x,y) is in this rectangle
+	 * 
 	 * @param x
 	 * @param y
 	 * @return
 	 */
 	public boolean containsPoint(float x, float y)
 	{
-		return x >= getX() && x <= getRight() && y >= getY() && y <= getBottom();
+		return x >= getX() && x <= getRight() && y >= getY()
+				&& y <= getBottom();
+	}
+
+	/**
+	 * Intersects rectangles
+	 * 
+	 * @param other
+	 * @return Returns Rectangle if interselects, null if disjoint
+	 */
+	public Rectangle intersectWith(Rectangle other)
+	{
+		float x = Math.max(this.getX(), other.getX());
+		float y = Math.max(this.getY(), other.getY());
+		float right = Math.min(this.getRight(), other.getRight());
+		float bottom = Math.min(this.getBottom(), other.getBottom());
+
+		if (x > right || y > bottom) // cannot be!
+			return null;
+
+		return new Rectangle(x, y, right - x, bottom - y);
+	}
+
+	/**
+	 * Checks if the two rectangles are equal
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean equals(Rectangle other)
+	{
+		return this.getX() == other.getX() && this.getY() == other.getY()
+				&& this.getWidth() == other.getWidth()
+				&& this.getHeight() == other.getHeight();
 	}
 
 	public RectangleRelation getRelationTo(Rectangle other)
 	{
-		//Check for 'same', 'touch' and 'aligned' by couting equal points
-		{
-			int equalPoints = 0;
-			
-			equalPoints += getX() == other.getX() ? 1 : 0;
-			equalPoints += getY() == other.getY() ? 1 : 0;
-			equalPoints += getRight() == other.getRight() ? 1 : 0;
-			equalPoints += getBottom() == other.getBottom() ? 1 : 0;
-			
-			switch(equalPoints)
-			{
-			case 4:
-				return RectangleRelation.same;
-			case 2:
-				return RectangleRelation.aligned;
-			case 1:
-				return RectangleRelation.touching;
-			case 3: //nononononono!
-				return RectangleRelation.ERROR;
-			}
-		}
-		
-		
-		
-		// Check if contained
-		if (getX() > other.getX()  && getY() > other.getY() && getRight() < other.getRight() && getBottom() < other.getBottom())
-			return RectangleRelation.contained;
-		
-		//Check if interselects
-		if(other.containsPoint(getX(), getY()) || other.containsPoint(getRight(), getY()) || other.containsPoint(getX(), getBottom()) || other.containsPoint(getRight(), getBottom()))
-			return RectangleRelation.interselecting;
-		if(this.containsPoint(other.getX(), other.getY()) || this.containsPoint(other.getRight(), other.getY()) || this.containsPoint(other.getX(), other.getBottom()) || this.containsPoint(other.getRight(), other.getBottom()))
-			return RectangleRelation.interselecting;
+		Rectangle intersected = this.intersectWith(other);
 
-		return RectangleRelation.disjoint; //disjoint is negation of interselection
+		// No intersection => disjoint
+		if (intersected == null)
+			return RectangleRelation.disjoint;
+
+		// Check if same (by using equals)
+		if (this.equals(intersected))
+			return RectangleRelation.same;
+
+		// Check if contained
+		if (getY() > other.getY() && getRight() < other.getRight()
+				&& getBottom() < other.getBottom())
+			return RectangleRelation.contained;
+
+		// Check if touching (width and height = 0)
+		if (intersected.getWidth() == 0 && intersected.getHeight() == 0)
+			return RectangleRelation.touching;
+
+		// Check if aligned (width OR height = 0)
+		if (intersected.getWidth() == 0 || intersected.getHeight() == 0)
+			return RectangleRelation.aligned;
+
+		return RectangleRelation.interselecting;
 	}
 
 }
