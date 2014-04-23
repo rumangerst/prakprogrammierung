@@ -142,6 +142,11 @@ public class Rectangle extends Figure implements MobileObject
 	{
 		Rectangle intersected = this.intersectWith(other);
 
+		// Check if contained
+		if (getY() > other.getY() && getRight() < other.getRight()
+				&& getBottom() < other.getBottom())
+			return RectangleRelation.contained;
+
 		// No intersection => disjoint
 		if (intersected == null)
 			return RectangleRelation.disjoint;
@@ -149,11 +154,6 @@ public class Rectangle extends Figure implements MobileObject
 		// Check if same (by using equals)
 		if (this.equals(intersected))
 			return RectangleRelation.same;
-
-		// Check if contained
-		if (getY() > other.getY() && getRight() < other.getRight()
-				&& getBottom() < other.getBottom())
-			return RectangleRelation.contained;
 
 		// Check if touching (width and height = 0)
 		if (intersected.getWidth() == 0 && intersected.getHeight() == 0)
