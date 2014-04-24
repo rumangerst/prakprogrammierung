@@ -53,18 +53,11 @@ public class Fasta
 	}
 	
 	/**
-	 * Resets Header to '>'
+	 * Clears all data (header and DNA sequence)
 	 */
-	public void resetHeader()
+	public void clearData()
 	{
 		header = ">";
-	}
-	
-	/**
-	 * Resets DNA sequence to an empty sequence
-	 */
-	public void resetDNASequence()
-	{
 		dna_sequence = "";
 	}
 	
