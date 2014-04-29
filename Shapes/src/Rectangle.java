@@ -140,9 +140,10 @@ public class Rectangle extends Figure implements MobileObject
 
 	public RectangleRelation getRelationTo(Rectangle other)
 	{
+		//Intersect rectangles and check it
 		Rectangle intersected = this.intersectWith(other);
 
-		// Check if contained
+		// Check if contained (Check here, intersected == other if contained! (Chooses bigger rectangle) )
 		if (getY() > other.getY() && getRight() < other.getRight()
 				&& getBottom() < other.getBottom())
 			return RectangleRelation.contained;

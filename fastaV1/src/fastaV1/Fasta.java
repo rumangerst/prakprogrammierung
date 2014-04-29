@@ -12,8 +12,8 @@ public class Fasta
 	 */
 	public Fasta()
 	{
-		header = ">";
-		dna_sequence = "";
+		header = ">"; //Valid empty header
+		dna_sequence = ""; //empty sequence contains only A,C,T,G.
 	}
 	
 	/**
