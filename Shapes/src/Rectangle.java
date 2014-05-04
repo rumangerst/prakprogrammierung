@@ -144,17 +144,24 @@ public class Rectangle extends Figure implements MobileObject
 		Rectangle intersected = this.intersectWith(other);
 
 		// Check if contained (Check here, intersected == other if contained! (Chooses bigger rectangle) )
-		if (getY() > other.getY() && getRight() < other.getRight()
+		/*if (getY() > other.getY() && getRight() < other.getRight()
 				&& getBottom() < other.getBottom())
-			return RectangleRelation.contained;
+			return RectangleRelation.contained;*/
 
 		// No intersection => disjoint
 		if (intersected == null)
 			return RectangleRelation.disjoint;
+		
+		//Check if contained	
+		//All points of this rectangle should be in intersection, BUT not all points of other rectangle should be in intersection
+		if(this.equals(intersected) && !other.equals(intersected))
+			return RectangleRelation.contained;
 
 		// Check if same (by using equals)
 		if (this.equals(intersected))
+		{
 			return RectangleRelation.same;
+		}
 
 		// Check if touching (width and height = 0)
 		if (intersected.getWidth() == 0 && intersected.getHeight() == 0)
