@@ -181,28 +181,28 @@ public class Rectangle extends Figure implements MobileObject
 
 		// No intersection => disjoint
 		if (intersected == null)
-			return RectangleRelation.disjoint;
+			return RectangleRelation.DISJOINT;
 		
 		//Check if contained	
 		//All points of this rectangle should be in intersection, BUT not all points of other rectangle should be in intersection
 		if(this.equals(intersected) && !other.equals(intersected))
-			return RectangleRelation.contained;
+			return RectangleRelation.CONTAINED;
 
 		// Check if same (by using equals)
 		if (this.equals(intersected))
 		{
-			return RectangleRelation.same;
+			return RectangleRelation.SAME;
 		}
 
 		// Check if touching (width and height = 0)
 		if (intersected.getWidth() == 0 && intersected.getHeight() == 0)
-			return RectangleRelation.touching;
+			return RectangleRelation.TOUCHING;
 
 		// Check if aligned (width OR height = 0)
 		if (intersected.getWidth() == 0 || intersected.getHeight() == 0)
-			return RectangleRelation.aligned;
+			return RectangleRelation.ALIGNED;
 
-		return RectangleRelation.interselecting;
+		return RectangleRelation.INTERESELECTING;
 	}
 
 }

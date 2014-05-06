@@ -2,10 +2,10 @@
 public enum RectangleRelation
 {
 	ERROR,
-	disjoint,
-	same,
-	contained,
-	aligned,
-	touching,
-	interselecting
+	DISJOINT,
+	SAME,
+	CONTAINED,
+	ALIGNED,
+	TOUCHING,
+	INTERESELECTING
 }
