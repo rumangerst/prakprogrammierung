@@ -1,8 +1,8 @@
 
 public abstract class Figure
 {
-	protected float x;
-	protected float y;
+	private float x;
+	private float y;
 	
 	public Figure()
 	{
@@ -24,6 +24,16 @@ public abstract class Figure
 	public float getY()
 	{
 		return this.y;
+	}
+	
+	protected void setX(float value)
+	{
+		this.x = value;
+	}
+	
+	protected void setY(float value)
+	{
+		this.y = value;
 	}
 	
 	public void printCoordinates()

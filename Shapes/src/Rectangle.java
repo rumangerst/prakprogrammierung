@@ -5,6 +5,9 @@ public class Rectangle extends Figure implements MobileObject
 	public float width;
 	public float height;
 
+	/**
+	 * Constructs default rectangle @ 0,0 with width=0 and height=0
+	 */
 	public Rectangle()
 	{
 		super();
@@ -13,9 +16,21 @@ public class Rectangle extends Figure implements MobileObject
 		height = 0;
 	}
 
+	/**
+	 * Constructs a new rectangle with given parameters
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
 	public Rectangle(float x, float y, float width, float height)
 	{
 		super(x, y);
+		
+		if(width < 0 || height < 0)
+		{
+			throw new InvalidParameterException("No negative width or height allowed!");
+		}
 
 		this.width = width;
 		this.height = height;
@@ -31,6 +46,9 @@ public class Rectangle extends Figure implements MobileObject
 		return height;
 	}
 
+	/**
+	 * Print all relevant data of this rectangle
+	 */
 	@Override
 	public void printCoordinates()
 	{
@@ -38,13 +56,19 @@ public class Rectangle extends Figure implements MobileObject
 				this.getWidth(), this.getHeight());
 	}
 
+	/**
+	 * Move rectangle to other position x,y
+	 */
 	@Override
 	public void move(float x, float y)
 	{
-		this.x = x;
-		this.y = y;
+		this.setX(x);
+		this.setY(y);
 	}
 
+	/**
+	 * Increases rectangle by adding value to width and height
+	 */
 	@Override
 	public void increase(float value) throws InvalidParameterException
 	{
@@ -56,21 +80,23 @@ public class Rectangle extends Figure implements MobileObject
 	}
 
 	/**
-	 * Shrinks the rectangle; will set width/height to zero if value is too big
+	 * Shrinks the rectangle by subtracting value from width and height; will set width/height to zero if value is too big
 	 */
 	@Override
 	public void decrease(float value) throws InvalidParameterException
 	{
 		if (value < 0)
+		{
 			throw new InvalidParameterException("No negative values allowed!");
+		}
+		
+		if(this.getWidth() - value < 0 || this.getHeight() - value < 0)
+		{
+			throw new InvalidParameterException("Cannot decrease that much! Rectangle would have negative size!");
+		}
 
 		this.width -= value;
 		this.height -= value;
-
-		if (this.width < 0)
-			this.width = 0;
-		if (this.height < 0)
-			this.height = 0;
 	}
 
 	/**
@@ -110,9 +136,9 @@ public class Rectangle extends Figure implements MobileObject
 	 * Intersects rectangles
 	 * 
 	 * @param other
-	 * @return Returns Rectangle if interselects, null if disjoint
+	 * @return Returns Rectangle if intersects, null if disjoint
 	 */
-	public Rectangle intersectWith(Rectangle other)
+	public Rectangle getIntersectionBetween(Rectangle other)
 	{
 		float x = Math.max(this.getX(), other.getX());
 		float y = Math.max(this.getY(), other.getY());
@@ -138,10 +164,15 @@ public class Rectangle extends Figure implements MobileObject
 				&& this.getHeight() == other.getHeight();
 	}
 
+	/**
+	 * Get relation of this rectangle to the other rectangle
+	 * @param other rectangle
+	 * @return
+	 */
 	public RectangleRelation getRelationTo(Rectangle other)
 	{
 		//Intersect rectangles and check it
-		Rectangle intersected = this.intersectWith(other);
+		Rectangle intersected = this.getIntersectionBetween(other);
 
 		// Check if contained (Check here, intersected == other if contained! (Chooses bigger rectangle) )
 		/*if (getY() > other.getY() && getRight() < other.getRight()
