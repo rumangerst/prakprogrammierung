@@ -7,5 +7,5 @@ public enum RectangleRelation
 	CONTAINED,
 	ALIGNED,
 	TOUCHING,
-	INTERESELECTING
+	INTERSELECTING
 }

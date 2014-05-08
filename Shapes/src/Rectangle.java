@@ -202,7 +202,7 @@ public class Rectangle extends Figure implements MobileObject
 		if (intersected.getWidth() == 0 || intersected.getHeight() == 0)
 			return RectangleRelation.ALIGNED;
 
-		return RectangleRelation.INTERESELECTING;
+		return RectangleRelation.INTERSELECTING;
 	}
 
 }
