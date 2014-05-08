@@ -23,10 +23,7 @@ public class Main
 		System.out.println("-- Dotplot beider Sequenzen:");
 		
 		//dotplot (both)
-		fasta1.dotPlotAgainst(fasta2);
-		
-		
-
+		fasta1.dotPlotAgainst(fasta2); 
 	}
 
 }
