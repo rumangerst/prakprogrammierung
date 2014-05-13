@@ -4,6 +4,9 @@ import java.util.Random;
 
 public class Deck
 {
+	/**
+	 * Static RANDOM for random stuff.
+	 */
 	public static final Random RANDOM = new Random();
 	
 	private ArrayList<Card> deck;
@@ -23,6 +26,9 @@ public class Deck
 		}
 	}
 	
+	/**
+	 * Merges card deck using 1000 generations of swapping random positions
+	 */
 	public void merge()
 	{
 		if(deck.size() == 0)
@@ -48,6 +54,9 @@ public class Deck
 		System.out.println("Karten gemischt!");
 	}
 	
+	/**
+	 * Prints cards in this deck
+	 */
 	public void print()
 	{
 		System.out.println("Kartendeck:");
@@ -63,6 +72,11 @@ public class Deck
 		return this.deck.size();
 	}
 	
+	/**
+	 * Returns first card in deck and removes it from list
+	 * @return
+	 * @throws Exception
+	 */
 	public Card pop() throws Exception
 	{
 		if(deck.size() == 0)
@@ -74,6 +88,11 @@ public class Deck
 		return first;
 	}
 	
+	/**
+	 * Checks if given card is still in deck
+	 * @param card
+	 * @return
+	 */
 	public boolean isInDeck(Card card)
 	{
 		for(Card c : deck)
