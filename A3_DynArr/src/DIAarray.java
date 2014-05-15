@@ -57,11 +57,11 @@ public class DIAarray implements DynIntArray
 	}
 
 	@Override
-	public void setElementAt(int i, int e) throws ArrayIndexOutOfBoundsException
+	public void setElementAt(int i, int e)
 	{
 		if(i >= this.size)
 		{
-			throw new ArrayIndexOutOfBoundsException();
+			return;
 		}
 		
 		data[i] = e;
@@ -101,7 +101,7 @@ public class DIAarray implements DynIntArray
 			}
 		}
 		
-		System.out.print("]");
+		System.out.print("]\n");
 	}
 
 }

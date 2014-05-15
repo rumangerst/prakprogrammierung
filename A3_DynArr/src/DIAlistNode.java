@@ -75,7 +75,7 @@ public class DIAlistNode
 	 * @param i
 	 * @return
 	 */
-	public int get(int index) throws ArrayIndexOutOfBoundsException
+	public int get(int index)
 	{
 		if(index == 0)
 		{
@@ -84,14 +84,14 @@ public class DIAlistNode
 		else
 		{
 			if(!hasNext())
-				throw new ArrayIndexOutOfBoundsException();
+				return 0; //Return 0
 			
 			return next.get(index - 1); //Call for next with index - 1
 		}
 		
 	}
 	
-	public void set(int index, int value) throws ArrayIndexOutOfBoundsException
+	public void set(int index, int value)
 	{
 		if(index == 0)
 		{
@@ -100,7 +100,7 @@ public class DIAlistNode
 		else
 		{
 			if(!hasNext())
-				throw new ArrayIndexOutOfBoundsException();
+				return;
 			
 			next.set(index - 1, value); //Call for next with index - 1
 		}

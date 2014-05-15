@@ -21,7 +21,7 @@ public class DIAlist implements DynIntArray
 	public void setElementAt(int i, int e)
 	{
 		if(data == null)
-			throw new ArrayIndexOutOfBoundsException();
+			return;
 		else
 			data.set(i, e);
 	}
@@ -67,7 +67,7 @@ public class DIAlist implements DynIntArray
 			}
 		}
 
-		System.out.print("]");
+		System.out.print("]\n");
 	}
 
 }
