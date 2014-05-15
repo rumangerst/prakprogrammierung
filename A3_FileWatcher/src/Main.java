@@ -1,4 +1,6 @@
 
+
+
 public class Main
 {
 
@@ -7,8 +9,16 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
-
+		FileObserver observer = new FileObserver("./work/TestFile.txt");
+		
+		try
+		{
+			observer.observe();
+		} 
+		catch (Exception e)
+		{
+			System.out.println("Fehler: " + e.getMessage());
+		} 
 	}
 
 }
