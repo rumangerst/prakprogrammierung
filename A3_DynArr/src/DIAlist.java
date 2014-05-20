@@ -11,17 +11,10 @@ public class DIAlist implements DynIntArray
 	public void add(int e)
 	{
 		if (data == null)
-			data = new DIAlistNode(e, null);
+			data = new DIAlistNode(e);
 		else
-		{
-			try
-			{
-				data.add(e);
-			}
-			catch (Exception e1)
-			{
-				System.out.println("Cannot add value to list! Must use add @ root node!");
-			}
+		{			
+			data.add(e);
 		}
 
 	}

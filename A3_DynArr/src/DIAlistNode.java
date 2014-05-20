@@ -2,14 +2,10 @@ public class DIAlistNode
 {
 	private int value;
 	private DIAlistNode next;
-	private DIAlistNode previous;
-
-	private int nextElementCount;
 
 	public DIAlistNode()
 	{
 		value = 0;
-		nextElementCount = 0;
 		next = null;
 	}
 
@@ -18,11 +14,10 @@ public class DIAlistNode
 	 * 
 	 * @param value
 	 */
-	public DIAlistNode(int value, DIAlistNode previous)
+	public DIAlistNode(int value)
 	{
 		this.value = value;
 		this.next = null;
-		this.previous = previous;
 	}
 
 	/**
@@ -33,40 +28,22 @@ public class DIAlistNode
 	public boolean hasNext()
 	{
 		return next != null;
-	}
-
+	}	
+	
 	/**
 	 * Add value to list, created by this node
 	 * 
 	 * @param value
-	 * @throws Exception
 	 */
-	public void add(int value) throws Exception
-	{
-		// Check if it's a root element
-		if (previous != null)
-			throw new Exception("Can only add elements to root node!");
-
-		add_internal(value);
-	}
-
-	/**
-	 * Internal add function to encapsulate list functions
-	 * 
-	 * @param value
-	 */
-	private void add_internal(int value)
-	{
-		// Increase count of next elements by 1
-		this.nextElementCount++;
-
+	public void add(int value)
+	{	
 		if (!hasNext())
 		{
-			next = new DIAlistNode(value, this);
+			next = new DIAlistNode(value);
 		}
 		else
 		{
-			next.add_internal(value);
+			next.add(value);
 		}
 	}
 
@@ -82,12 +59,18 @@ public class DIAlistNode
 
 	/**
 	 * Returns count of all elements after this node
+	 * 	
 	 * 
 	 * @return
 	 */
 	public int countNextElements()
 	{
-		return this.nextElementCount;
+		if(next == null)
+			return 0;
+		else
+		{
+			return 1 + next.countNextElements();
+		}		
 	}
 
 	/**
