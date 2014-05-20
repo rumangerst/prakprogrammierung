@@ -17,9 +17,9 @@ public class Deck
 		deck = new ArrayList<>();
 		
 		//Create card set
-		for(CardColor color : CardColor.values())
+		for(CardValue value : CardValue.values())
 		{
-			for(CardValue value : CardValue.values())
+			for(CardColor color : CardColor.values())
 			{
 				deck.add(new Card(color, value));
 			}

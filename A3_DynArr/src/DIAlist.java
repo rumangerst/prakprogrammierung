@@ -10,17 +10,28 @@ public class DIAlist implements DynIntArray
 	@Override
 	public void add(int e)
 	{
-		if(data == null)
-			data = new DIAlistNode(e);
+		if (data == null)
+			data = new DIAlistNode(e, null);
 		else
-			data.add(e);
+		{
+			try
+			{
+				data.add(e);
+			}
+			catch (Exception e1)
+			{
+				System.out.println("Cannot add value to list! Must use add @ root node!");
+			}
+		}
 
 	}
 
 	@Override
 	public void setElementAt(int i, int e)
 	{
-		if(data == null)
+		if(i < 0)
+			return;
+		if (data == null)
 			return;
 		else
 			data.set(i, e);
@@ -29,17 +40,12 @@ public class DIAlist implements DynIntArray
 	@Override
 	public int getElementAt(int i)
 	{
-		if(data == null)
+		if(i < 0)
 			return 0;
-		
-		try
-		{
-			return data.get(i);
-		}
-		catch(ArrayIndexOutOfBoundsException e)
-		{
+		if (data == null)
 			return 0;
-		}
+
+		return data.get(i);
 	}
 
 	@Override

@@ -27,9 +27,9 @@ public class FileObserver
 		
 		//Start comparer loop
 		//Will lock main thread
-		while(runTime <= 30000)
+		while(runTime < 30000)
 		{
-			System.out.println("Überprüfe ...");
+			System.out.println("Überprüfe ... Noch " + (30 - (runTime / 1000)) + " Sekunden bis Abbruch!");
 			
 			Thread.sleep(500);
 			runTime += 500;

@@ -58,8 +58,8 @@ public class DIAarray implements DynIntArray
 
 	@Override
 	public void setElementAt(int i, int e)
-	{
-		if(i >= this.size)
+	{		
+		if(i >= this.size || i < 0)
 		{
 			return;
 		}
@@ -70,7 +70,7 @@ public class DIAarray implements DynIntArray
 	@Override
 	public int getElementAt(int i)
 	{
-		if(i >= this.size)
+		if(i >= this.size || i < 0)
 		{
 			return 0;
 		}

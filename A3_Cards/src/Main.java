@@ -13,6 +13,10 @@ public class Main
 		
 		System.out.println("---");
 		
+		System.out.println("Es sind " + deck.size() + " Karten im Stapel.");
+		
+		System.out.println("---");
+		
 		deck.merge();
 		
 		System.out.println("---");
@@ -24,6 +28,10 @@ public class Main
 		System.out.println(deck.pop().toString() + " gezogen!");
 		System.out.println(deck.pop().toString() + " gezogen!");
 		System.out.println(deck.pop().toString() + " gezogen!");
+		
+		System.out.println("---");
+		
+		System.out.println("Es sind " + deck.size() + " Karten im Stapel.");
 		
 		System.out.println("---");
 		
