@@ -1,5 +1,5 @@
 
-public class Buch
+public class Buch implements Comparable
 {
 	private String title;
 	private String author;
@@ -29,7 +29,29 @@ public class Buch
 	
 	public void printData()
 	{
-		System.out.printf("%s: %s (%d)\n", getAuthor(), getTitle(), getYear());
+		System.out.println(this.toString());
+	}
+
+	@Override
+	public int compareTo(Object obj)
+	{
+		Buch book = (Buch)obj;
+		
+		return book.getAuthor().compareTo(this.getAuthor());
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		Buch book = (Buch)obj;
+		
+		return book.getAuthor().equals(this.getAuthor()) && book.getTitle().equals(this.getTitle()) && book.getYear() == this.getYear();
+	}
+	
+	@Override
+	public String toString()
+	{		
+		return String.format("%s: %s (%d)", getAuthor(), getTitle(), getYear());
 	}
 	
 }
