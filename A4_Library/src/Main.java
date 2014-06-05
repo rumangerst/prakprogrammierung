@@ -7,7 +7,7 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		BuecherRegal regal = new BuecherRegal("Bücher");
+		BuecherRegal regal = new BuecherRegal("Verschiedenes");
 		
 		regal.store(new Buch("Faust", "Goethe", 1808));
 		regal.store(new Buch("Nathan der Weise", "Lessing", 1779));
