@@ -91,7 +91,7 @@ public class BuecherRegal
 	{
 		ArrayList<Buch> result = new ArrayList<>();
 		
-		System.out.println("Folgende Bücher in " + signature + " herausgenommen:");
+		System.out.println("Folgende Bücher aus " + signature + " herausgenommen:");
 		
 		for(Buch b: books)
 		{
