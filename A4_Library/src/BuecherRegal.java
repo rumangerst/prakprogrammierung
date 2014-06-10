@@ -1,7 +1,4 @@
-import java.awt.print.Book;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 
 
 public class BuecherRegal
