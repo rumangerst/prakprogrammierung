@@ -12,6 +12,7 @@ public class Main
 		regal.store(new Buch("Faust", "Goethe", 1808));
 		regal.store(new Buch("Nathan der Weise", "Lessing", 1779));
 		regal.store(new Buch("Faust II", "Goethe", 1832));
+		regal.store(new Buch("Faust II.I", "Goethe", 1832));
 		regal.store(new Buch("Der Sandmann", "Hoffmann", 1816));
 		
 		regal.printContents();

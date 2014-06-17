@@ -1,7 +1,10 @@
 package fasta.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -12,13 +15,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
+
+import fastaV2.Fasta;
 
 public class FastaMainWindow extends JFrame
 {
-	private JTextField uiSequence1Header;
-	private JTextField uiSequence2Header;
-	private JTextArea uiSequence1DNA;
-	private JTextArea uiSequence2DNA;
+	SequencePanel sequence1Panel;
+	SequencePanel sequence2Panel;
 	
 	public FastaMainWindow()
 	{
@@ -26,54 +30,23 @@ public class FastaMainWindow extends JFrame
 		this.setTitle("FASTA GUI");
 		
 		this.initializeUI();
+		
+		sequence1Panel.setFASTA(new Fasta(">Test", "ACTGCCCGCCCATTC"));
 	}
 	
 	private void initializeUI()
 	{
 		this.getContentPane().setLayout(new GridLayout(3, 1));
 		
-		initializeSequence1UI();
-		initializeSequence2UI();
+		sequence1Panel = new SequencePanel("Sequence 1");
+		this.add(sequence1Panel);
+		
+		sequence2Panel = new SequencePanel("Sequence 2");
+		this.add(sequence2Panel);
+		
 		initializeToolsUI();
-	}
+	}	
 	
-	private void initializeSequence1UI()
-	{
-		/**
-		 * Group panel
-		 */
-		JPanel panel = new JPanel();		
-		panel.setBorder(BorderFactory.createTitledBorder("Sequence 1"));
-		panel.setLayout(new GridLayout(3, 2, 10, 10));
-		
-		this.add(panel);
-		
-		/**
-		 * Add components		
-		 */
-		panel.add(new JLabel("Header"));
-		
-		uiSequence1Header = new JTextField();
-		panel.add(uiSequence1Header);
-		
-		panel.add(new JLabel("Sequence"));
-		
-		uiSequence1DNA = new JTextArea();
-		panel.add(uiSequence1DNA);
-		
-		
-	}
-	
-	private void initializeSequence2UI()
-	{
-		/**
-		 * Group panel
-		 */
-		JPanel panel = new JPanel();		
-		panel.setBorder(BorderFactory.createTitledBorder("Sequence 2"));
-		
-		this.add(panel);
-	}
 	
 	private void initializeToolsUI()
 	{

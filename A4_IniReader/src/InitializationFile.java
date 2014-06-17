@@ -26,13 +26,14 @@ public class InitializationFile
 		/**
 		 * Gerade bearbeitete Sektion ist Standard-Sektion
 		 */
-		IniSection currentSection = new IniSection("");		
+		//IniSection currentSection = new IniSection("");	
+		IniSection currentSection = null;
 
 		String buffer = null;
 		while ((buffer = rd.readLine()) != null)
 		{
 			/**
-			 * Trimme Buffer
+			 * Trimm Buffer
 			 */
 			buffer = buffer.trim();
 			
@@ -53,7 +54,7 @@ public class InitializationFile
 				/**
 				 * Sektion wird jetzt gewechselt
 				 */
-				if(!currentSection.isEmpty())
+				if(currentSection != null && !currentSection.isEmpty())
 				{
 					sections.add(currentSection);
 				}
@@ -62,6 +63,11 @@ public class InitializationFile
 			}
 			else if(buffer.contains("=")) 
 			{
+				if(currentSection == null)
+				{
+					throw new InvalidInitializationFileException("Setting has no section!");
+				}
+				
 				/**
 				 * Splitte String, um Zuweisung zu lesen
 				 */

@@ -72,7 +72,7 @@ public class BuecherRegal
 		}
 		else
 		{
-			System.out.println("Buch konnte in " + signature + " nicht gefundne werden!");
+			System.out.println("Buch konnte in " + signature + " nicht gefunden werden!");
 		}
 		
 		

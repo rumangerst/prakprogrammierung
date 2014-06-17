@@ -5,8 +5,13 @@ public class Buch implements Comparable
 	private String author;
 	private int year;
 	
-	public Buch(String title, String author, int year)
+	public Buch(String title, String author, int year) throws IllegalArgumentException
 	{
+		if(title == null || title.isEmpty())
+			throw new IllegalArgumentException("Invalid title");
+		if(author == null || author.isEmpty())
+			throw new IllegalArgumentException("Invalid author");
+		
 		this.title = title;
 		this.author = author;
 		this.year = year;
