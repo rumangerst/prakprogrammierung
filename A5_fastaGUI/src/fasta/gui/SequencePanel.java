@@ -5,19 +5,19 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -27,15 +27,17 @@ import fastaV2.IllegalSequenceException;
 
 public class SequencePanel extends JPanel implements ActionListener
 {
+	private JFrame parent;
 	private String name;
 	private JTextField uiSequenceHeader;
 	private JTextArea uiSequenceDNA;
 
 	private Fasta fasta;
 
-	public SequencePanel(String name)
+	public SequencePanel(String name, JFrame parent)
 	{
 		this.name = name;
+		this.parent = parent;
 
 		initializeComponents();
 	}
@@ -85,12 +87,16 @@ public class SequencePanel extends JPanel implements ActionListener
 		uiSequenceDNA.setEditable(false);
 		uiSequenceDNA.setBorder(BorderFactory.createEtchedBorder());
 		uiSequenceDNA.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
+		
+		//Embedd JTextArea in JScrollPane
+		JScrollPane uiSequenceDNA_scollPane = new JScrollPane(uiSequenceDNA);
+		
 		c.gridx = 1;
 		c.gridy = 1;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
 		c.weighty = 1;
-		panel.add(uiSequenceDNA, c);
+		panel.add(uiSequenceDNA_scollPane, c);
 
 		/**
 		 * Add buttons
@@ -159,7 +165,7 @@ public class SequencePanel extends JPanel implements ActionListener
 			{
 				Fasta fasta = new Fasta();
 				fasta.read(dlg.getSelectedFile());
-				
+
 				this.setFASTA(fasta);
 			}
 			catch (IllegalHeaderException | IllegalSequenceException
@@ -167,6 +173,10 @@ public class SequencePanel extends JPanel implements ActionListener
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
+				JOptionPane.showMessageDialog(this,
+						"Couldn't load FASTA file!\n" + e.getMessage(),
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -180,7 +190,13 @@ public class SequencePanel extends JPanel implements ActionListener
 		}
 		else if (e.getActionCommand().equals("INPUT"))
 		{
-
+			FastaInputSequenceDialog dlg = new FastaInputSequenceDialog(this.parent);
+			Fasta input = dlg.showDialog();
+			
+			if(input != null)
+			{
+				setFASTA(input);
+			}
 		}
 	}
 }
