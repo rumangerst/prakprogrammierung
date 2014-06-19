@@ -1,7 +1,9 @@
 package binary.clock;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
@@ -27,7 +29,8 @@ public class BinaryViewerVertical extends JPanel
 			throw new IllegalArgumentException("Length must me at least one!");
 		
 		this.length = length;
-		this.repaint();
+		
+		setNumber(0);
 	}
 	
 	public int getLength()
@@ -83,12 +86,53 @@ public class BinaryViewerVertical extends JPanel
 		return max;
 	}
 	
+	public boolean[] getBinaryNumber()
+	{
+		boolean[] binary = new boolean[length];
+		
+		int leftOverNumber = number;
+		
+		while(leftOverNumber != 0)
+		{
+			int highestBinary = (int)Math.floor(Math.log10(leftOverNumber) / Math.log10(2));
+			binary[highestBinary] = true;
+			
+			leftOverNumber -= (int)Math.pow(2, highestBinary);			
+		}
+		
+		return binary;
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
 		
+		Graphics2D g2 = (Graphics2D)g;
 		
+		/**
+		 * Resize component, using width
+		 */
+		this.setPreferredSize(new Dimension(this.getWidth(), length * this.getWidth()));
+		
+		/**
+		 * Draw number
+		 */
+		boolean[] binary = getBinaryNumber();
+		
+		for(int i = length - 1; i >= 0; i--)
+		{
+			boolean active = binary[i];
+			
+			if(active)
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
 	}
 	
 }
