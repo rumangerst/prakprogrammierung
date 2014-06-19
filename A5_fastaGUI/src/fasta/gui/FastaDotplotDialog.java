@@ -7,7 +7,10 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+
+import fastaV2.Fasta;
 
 public class FastaDotplotDialog extends JDialog
 {
@@ -27,6 +30,7 @@ public class FastaDotplotDialog extends JDialog
 		this.setSize(400, 500);
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		c.ipadx = 5;
 		
 		/**
 		 * Header of sequence 1
@@ -52,6 +56,7 @@ public class FastaDotplotDialog extends JDialog
 		JLabel sequence2Name = new JLabel("Sequence 2");
 		c.gridx = 0;
 		c.gridy = 1;
+		c.weightx = 0;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		this.add(sequence2Name, c);
 		
@@ -68,13 +73,25 @@ public class FastaDotplotDialog extends JDialog
 		 * Content pane
 		 */
 		dotplotCanvas = new FastaDotPlotCanvas();
+		
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 2;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
 		c.weighty = 1;
-		this.add(dotplotCanvas, c);
+		
+		JScrollPane dotPlotContainer = new JScrollPane(dotplotCanvas);
+		dotPlotContainer.setAutoscrolls(true);
+		
+		this.add(dotPlotContainer, c);
 
+	}
+	
+	public void dotplot(Fasta fasta1, Fasta fasta2)
+	{
+		dotplotCanvas.dotplot(fasta1, fasta2);
+		uiSequence1Header.setText(fasta1.getHeader());
+		uiSequence2Header.setText(fasta2.getHeader());
 	}
 }
