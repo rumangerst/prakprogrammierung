@@ -8,6 +8,8 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
+		BinaryClockWindow wnd = new BinaryClockWindow();
+		wnd.setVisible(true);
 	}
 
 }

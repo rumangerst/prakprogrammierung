@@ -40,6 +40,7 @@ public class FastaInputSequenceDialog extends JDialog implements ActionListener
 
 	private void initializeComponents()
 	{
+		this.setTitle("Input sequence");
 		this.setSize(400, 300);
 		this.setModal(true);
 		this.setLayout(new GridBagLayout());

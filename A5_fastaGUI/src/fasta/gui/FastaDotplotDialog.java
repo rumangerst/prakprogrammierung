@@ -26,6 +26,7 @@ public class FastaDotplotDialog extends JDialog
 	
 	private void initializeComponents()
 	{
+		this.setTitle("Dotplot");
 		this.setModal(true);
 		this.setSize(400, 500);
 		this.setLayout(new GridBagLayout());
