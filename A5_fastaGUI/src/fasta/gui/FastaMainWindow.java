@@ -1,10 +1,5 @@
 package fasta.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,80 +8,78 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.border.BevelBorder;
 
-import fastaV2.Fasta;
+import javax.swing.WindowConstants;
 
 public class FastaMainWindow extends JFrame implements ActionListener
 {
-	SequencePanel sequence1Panel;
-	SequencePanel sequence2Panel;
 
-	public FastaMainWindow()
-	{
-		this.setSize(800, 600);
-		this.setTitle("FASTA GUI");
+    SequencePanel sequence1Panel;
+    SequencePanel sequence2Panel;
 
-		this.initializeComponents();
+    public FastaMainWindow()
+    {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setSize(800, 600);
+        this.setTitle("FASTA GUI");
 
-		// sequence1Panel.setFASTA(new Fasta(">Test", "ACTGCCCGCCCATTC"));
-	}
+        this.initializeComponents();
 
-	private void initializeComponents()
-	{
-		this.getContentPane().setLayout(new GridLayout(3, 1));
+        // sequence1Panel.setFASTA(new Fasta(">Test", "ACTGCCCGCCCATTC"));
+    }
 
-		sequence1Panel = new SequencePanel("Sequence 1", this);
-		this.add(sequence1Panel);
+    private void initializeComponents()
+    {
+        this.getContentPane().setLayout(new GridLayout(3, 1));
 
-		sequence2Panel = new SequencePanel("Sequence 2", this);
-		this.add(sequence2Panel);
+        sequence1Panel = new SequencePanel("Sequence 1", this);
+        this.add(sequence1Panel);
 
-		/**
-		 * Group panel
-		 */
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-		panel.setBorder(BorderFactory.createTitledBorder("Tools"));
+        sequence2Panel = new SequencePanel("Sequence 2", this);
+        this.add(sequence2Panel);
 
-		this.add(panel);
+        /**
+         * Group panel
+         */
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder("Tools"));
 
-		/**
-		 * Dotplot button
-		 */
-		JButton bDotplot = new JButton("Dotplot Sequences");
-		bDotplot.addActionListener(this);
-		bDotplot.setActionCommand("DOTPLOT");
+        this.add(panel);
 
-		panel.add(bDotplot);
-	}
+        /**
+         * Dotplot button
+         */
+        JButton bDotplot = new JButton("Dotplot Sequences");
+        bDotplot.addActionListener(this);
+        bDotplot.setActionCommand("DOTPLOT");
 
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (e.getActionCommand().equals("DOTPLOT"))
-		{
-			if (sequence1Panel.getFASTA() != null
-					&& sequence2Panel.getFASTA() != null)
-			{
-				FastaDotplotDialog dlg = new FastaDotplotDialog(this);
+        panel.add(bDotplot);
+    }
 
-				dlg.dotplot(sequence1Panel.getFASTA(),
-						sequence2Panel.getFASTA());
-				dlg.setVisible(true);
-				
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(this, "No sequences loaded!",
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getActionCommand().equals("DOTPLOT"))
+        {
+            if (sequence1Panel.getFASTA() != null
+                    && sequence2Panel.getFASTA() != null)
+            {
+                FastaDotplotDialog dlg = new FastaDotplotDialog(this);
 
-		}
-	}
+                dlg.dotplot(sequence1Panel.getFASTA(),
+                        sequence2Panel.getFASTA());
+                dlg.setVisible(true);
+
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "No sequences loaded!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }
 }

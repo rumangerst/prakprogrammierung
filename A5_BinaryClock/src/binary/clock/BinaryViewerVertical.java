@@ -3,10 +3,12 @@ package binary.clock;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import java.awt.font.FontRenderContext;
 import javax.swing.JPanel;
 
 public class BinaryViewerVertical extends JPanel
@@ -23,7 +25,7 @@ public class BinaryViewerVertical extends JPanel
 		length = 1;
 		inactiveColor = new Color(50,50,50);
 		activeColor = new Color(0,100,200);
-		setBorderColor(new Color(0, 50, 100));
+		borderColor = new Color(0, 50, 100);
 		number = 0;
 	}
 	
@@ -161,6 +163,28 @@ public class BinaryViewerVertical extends JPanel
 			
 			y -= cellSize;
 		}
+                
+                /**
+                 * Try to draw label
+                 */
+                
+                {
+                    y = this.getHeight() - cellSize;
+                    Font decimalFont = new Font(Font.MONOSPACED, Font.PLAIN, cellSize / 2);
+                    g2.setFont(decimalFont);
+                    
+                    if(binary[0])
+                    {
+                        g2.setColor(inactiveColor);
+                    }
+                    else
+                    {
+                        g2.setColor(activeColor);
+                    }
+                    
+                    g2.drawString("" + number % 10, (cellSize / 2) * 0.75f, y + (cellSize / 2) * 1.35f);
+                    
+                }
 	}
 
 	

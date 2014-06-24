@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.WindowConstants;
 
 public class BinaryClockWindow extends JFrame implements ActionListener
 {
@@ -37,6 +38,7 @@ public class BinaryClockWindow extends JFrame implements ActionListener
 		setSize(640, 480);
 		setLayout(new GridBagLayout());
 		setBackground(Color.BLACK);
+                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		/**
 		 * Initialize digits
