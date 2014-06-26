@@ -59,7 +59,7 @@ public class BingoGame
         }
         else
         {
-            
+            if(cur)
         }
     }
     
