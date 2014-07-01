@@ -12,15 +12,15 @@ import java.util.Random;
  */
 public class BingoCard
 {
-
-    public static final Random RANDOM = new Random();
+    private BingoGame game;
     private String name;
     private boolean isHuman;
     private int[][] field;
     private boolean[][] strikes;
 
-    public BingoCard(String name, boolean isHuman)
+    public BingoCard(String name, boolean isHuman, BingoGame game)
     {
+        this.game = game;
         this.isHuman = isHuman;
         this.name = name;
         this.field = new int[5][5];
@@ -31,13 +31,13 @@ public class BingoCard
         {
             for (int y = 0; y < 5; y++)
             {
-                field[x][y] = 1 + RANDOM.nextInt(76);
+                field[x][y] = game.getCardFieldNumber();
                 strikes[x][y] = false;
             }
         }
     }
 
-    public boolean getIsHuman()
+    public boolean isHuman()
     {
         return isHuman;
     }
@@ -57,7 +57,7 @@ public class BingoCard
         return strikes[x][y];
     }
 
-    public boolean unmarkedNumbers(BingoGame game)
+    public boolean unmarkedNumbers()
     {
         for (int x = 0; x < 5; x++)
         {
@@ -76,7 +76,7 @@ public class BingoCard
         return false;
     }
 
-    public void markAll(BingoGame game)
+    public void markAll()
     {
         for (int x = 0; x < 5; x++)
         {
@@ -90,7 +90,7 @@ public class BingoCard
         }
     }
 
-    public void mark(int x, int y, BingoGame game)
+    public void mark(int x, int y)
     {
         if (getValueAt(x, y) == game.getCurrentNumber())
         {
@@ -169,7 +169,7 @@ public class BingoCard
             for (int i = 0; i < 5; i++)
             {
 
-                row &= isMarked(i, 5 - i);
+                row &= isMarked(i, i);
 
                 if (!row)
                 {
