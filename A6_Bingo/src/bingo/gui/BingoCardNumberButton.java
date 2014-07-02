@@ -6,14 +6,18 @@ package bingo.gui;
 
 import bingo.game.BingoCard;
 import bingo.game.BingoGame;
+import bingo.game.BingoGameState;
 import bingo.game.BingoListener;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.LineMetrics;
 import javax.swing.JButton;
 
 /**
@@ -81,26 +85,32 @@ public class BingoCardNumberButton extends JButton implements BingoListener, Act
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        boolean visibleNumbers = (getPlayer().isHuman() && getPlayer() == game.getCurrentPlayer()) || game.getState() == BingoGameState.FINISHED;
 
         /**
          * Draw text
          */
-        int fontsize = Math.min(getWidth(), getHeight()) / 2;
         String number = "?";
-        if (getPlayer().isHuman())
+        if (visibleNumbers)
         {
             number = getPlayer().getValueAt(bingoX, bingoY) + "";
         }
 
         g2.setColor(Color.GRAY);
-        g2.setFont(new Font(Font.DIALOG, Font.PLAIN, fontsize));
-        g2.drawString(number, getWidth() / 4, (int) (getHeight() / 1.5));
+        
+        Font numberFont = new Font(Font.DIALOG, Font.PLAIN, Math.min(getWidth(), getHeight()) / 2);
+        FontMetrics metrics = g2.getFontMetrics(numberFont);       
+        
+        g2.setFont(numberFont);
+        g2.drawString(number, getWidth() / 2 - metrics.stringWidth(number) / 2, getHeight() / 2 + metrics.getAscent() / 2);
 
         
         /**
          * Draw cross/mark
          */
-        if (getPlayer().isHuman())
+        if (visibleNumbers)
         {
             if (getPlayer().isMarked(bingoX, bingoY))
             {

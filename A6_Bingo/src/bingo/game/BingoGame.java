@@ -14,13 +14,14 @@ import java.util.Random;
  */
 public class BingoGame
 {
+
     public static final Random RANDOM = new Random();
 
     private ArrayList<BingoListener> listeners;
     private ArrayList<Integer> existingCardFieldNumbers;
     private BingoGameState gameState;
     private ArrayList<BingoCard> cards;
-    private LinkedList<BingoCard> currentRoundPlayers;
+    private int currentRoundPlayerIndex;
     private int currentNumber;
 
     public BingoGame()
@@ -29,7 +30,7 @@ public class BingoGame
 
         gameState = BingoGameState.NOT_STARTED;
         cards = new ArrayList<>();
-        currentRoundPlayers = new LinkedList<>();
+        currentRoundPlayerIndex = -1;
         existingCardFieldNumbers = new ArrayList<>();
     }
 
@@ -37,7 +38,7 @@ public class BingoGame
     {
         if (gameState != BingoGameState.NOT_STARTED)
         {
-            throw new RuntimeException("Game already started!");
+            throw new BingoGameException("Game already started!");
         }
 
         gameState = BingoGameState.RUNNING;
@@ -47,10 +48,8 @@ public class BingoGame
 
     private void dice()
     {
-        currentRoundPlayers.clear();
-
-        currentNumber = RANDOM.nextInt(75) + 1;
-        currentRoundPlayers.addAll(cards);
+        currentRoundPlayerIndex = -1;
+        currentNumber = RANDOM.nextInt(75) + 1;        
 
         for (BingoListener listener : listeners)
         {
@@ -63,7 +62,7 @@ public class BingoGame
     private boolean checkIfPlayerWon()
     {
         //Look for player, who won
-        for (BingoCard card : currentRoundPlayers)
+        for (BingoCard card : cards)
         {
             if (card.hasBingo())
             {
@@ -71,7 +70,7 @@ public class BingoGame
                 {
                     listener.bingoWon(card);
                 }
-                
+
                 gameState = BingoGameState.FINISHED;
 
                 return true;
@@ -81,36 +80,34 @@ public class BingoGame
         return false;
     }
 
-    private void nextPlayer()
+    public void nextPlayer()
     {
-        if (currentRoundPlayers.isEmpty())
+        currentRoundPlayerIndex++;
+        
+        if (currentRoundPlayerIndex >= cards.size())
         {
             dice();
         }
         else
         {
             //Gibt es Bingo?
-            if(checkIfPlayerWon())
+            if (checkIfPlayerWon())
             {
                 return;
             }
 
             //Kein Bingo
-            BingoCard player = currentRoundPlayers.getFirst();
+            BingoCard player = cards.get(currentRoundPlayerIndex);
+
+            for (BingoListener listener : listeners)
+            {
+                listener.bingoPlayerTurn(player);
+            }
 
             if (!player.isHuman())
             {
                 player.markAll();
-                currentRoundPlayers.remove(player);
-
                 nextPlayer();
-            }
-            else
-            {
-                for (BingoListener listener : listeners)
-                {
-                    listener.bingoPlayerTurn(player);
-                }
             }
         }
     }
@@ -121,8 +118,8 @@ public class BingoGame
         {
             throw new RuntimeException("Game already started. Cannot add more players!");
         }
-        
-        if(getPlayer(name) != null)
+
+        if (getPlayer(name) != null)
         {
             throw new RuntimeException("Player already existing!");
         }
@@ -137,7 +134,7 @@ public class BingoGame
 
     public void removeBingoListener(BingoListener listener)
     {
-        listeners.add(listener);
+        listeners.remove(listener);
     }
 
     public BingoCard getPlayer(String name)
@@ -165,24 +162,31 @@ public class BingoGame
 
     public BingoCard getCurrentPlayer()
     {
-        if(currentRoundPlayers.isEmpty())
+        if (currentRoundPlayerIndex < 0 || currentRoundPlayerIndex >= cards.size())
+        {
             return null;
-        
-        return currentRoundPlayers.getFirst();
+        }
+
+        return cards.get(currentRoundPlayerIndex);
     }
-    
+
     public int getCardFieldNumber()
     {
         int random = 0;
-        
+
         do
         {
             random = 1 + RANDOM.nextInt(75);
         }
-        while(existingCardFieldNumbers.contains(random));
-        
+        while (existingCardFieldNumbers.contains(random));
+
         existingCardFieldNumbers.add(random);
-        
+
         return random;
+    }
+
+    public BingoGameState getState()
+    {
+        return gameState;
     }
 }

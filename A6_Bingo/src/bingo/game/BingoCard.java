@@ -78,6 +78,11 @@ public class BingoCard
 
     public void markAll()
     {
+        if(game.getCurrentPlayer() != this)
+            throw new InvalidPlayerActionException("It's not this player's turn!");
+        if(game.getState() != BingoGameState.RUNNING)
+            throw new InvalidPlayerActionException("Game is not running!");
+        
         for (int x = 0; x < 5; x++)
         {
             for (int y = 0; y < 5; y++)
@@ -92,6 +97,11 @@ public class BingoCard
 
     public void mark(int x, int y)
     {
+        if(game.getCurrentPlayer() != this)
+            throw new InvalidPlayerActionException("It's not this player's turn!");
+        if(game.getState() != BingoGameState.RUNNING)
+            throw new InvalidPlayerActionException("Game is not running!");
+        
         if (getValueAt(x, y) == game.getCurrentNumber())
         {
             strikes[x][y] = true;

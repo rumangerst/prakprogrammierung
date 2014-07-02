@@ -11,16 +11,19 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
  * @author ju39gox
  */
-public class BingoCardPanel extends JPanel implements BingoListener
+public class BingoCardPanel extends JPanel implements BingoListener, ActionListener
 {
 
     private BingoGame game;
@@ -33,7 +36,7 @@ public class BingoCardPanel extends JPanel implements BingoListener
         this.game = game;
         this.playerName = playerName;
         this.uiBingoFields = new BingoCardNumberButton[5][5];
-        
+
         game.addBingoListener(this);
 
         initializeComponents();
@@ -47,7 +50,7 @@ public class BingoCardPanel extends JPanel implements BingoListener
     private void initializeComponents()
     {
         this.setEnabled(false);
-        this.setBorder(BorderFactory.createTitledBorder(playerName));        
+        this.setBorder(BorderFactory.createTitledBorder(playerName));
         this.setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
@@ -56,12 +59,12 @@ public class BingoCardPanel extends JPanel implements BingoListener
         //Add labels
         for (int i = 1; i < 6; i++)
         {
-            JLabel labelTop = new JLabel("" + "BINGO".charAt(i - 1));
+            JLabel labelTop = new JLabel("" + "BINGO".charAt(i - 1), JLabel.CENTER);
             c.gridx = i;
             c.gridy = 0;
             this.add(labelTop, c);
 
-            JLabel labelBottom = new JLabel("" + "BINGO".charAt(i - 1));
+            JLabel labelBottom = new JLabel("" + "BINGO".charAt(i - 1), JLabel.CENTER);
             c.gridx = 0;
             c.gridy = i;
             this.add(labelBottom, c);
@@ -83,30 +86,32 @@ public class BingoCardPanel extends JPanel implements BingoListener
                 this.add(button, c);
             }
         }
-        
+
         //Add 'finished' button
         uiBingoFinishTurn = new JButton("Fertig!");
         c.weightx = 0;
         c.weighty = 1;
-        c.gridx= 0;
+        c.gridx = 0;
         c.gridy = 0;
-      
+        uiBingoFinishTurn.addActionListener(this);
+        uiBingoFinishTurn.setActionCommand("FINISH_TURN");
+
         add(uiBingoFinishTurn, c);
     }
 
     @Override
     public void bingoDiced(int number)
-    {       
+    {
     }
 
     @Override
     public void bingoPlayerTurn(BingoCard player)
     {
-        if(player.getName().equals(playerName))
+        if (player.getName().equals(playerName))
         {
             this.setEnabled(true);
-            
-            if(player.isHuman())
+
+            if (player.isHuman())
             {
                 uiBingoFinishTurn.setVisible(true);
             }
@@ -114,18 +119,27 @@ public class BingoCardPanel extends JPanel implements BingoListener
             {
                 uiBingoFinishTurn.setVisible(false);
             }
-        }      
+        }
         else
         {
             this.setEnabled(false);
             uiBingoFinishTurn.setVisible(false);
         }
-        
+
     }
 
     @Override
     public void bingoWon(BingoCard player)
     {
         this.setEnabled(false);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getActionCommand().equals("FINISH_TURN"))
+        {
+            game.nextPlayer();
+        }
     }
 }
