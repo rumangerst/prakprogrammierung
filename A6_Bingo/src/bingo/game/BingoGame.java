@@ -16,7 +16,6 @@ public class BingoGame
 {
 
     public static final Random RANDOM = new Random();
-
     private ArrayList<BingoListener> listeners;
     private ArrayList<Integer> existingCardFieldNumbers;
     private BingoGameState gameState;
@@ -49,7 +48,7 @@ public class BingoGame
     private void dice()
     {
         currentRoundPlayerIndex = -1;
-        currentNumber = RANDOM.nextInt(75) + 1;        
+        currentNumber = RANDOM.nextInt(75) + 1;
 
         for (BingoListener listener : listeners)
         {
@@ -59,44 +58,34 @@ public class BingoGame
         nextPlayer();
     }
 
-    private boolean checkIfPlayerWon()
+    public void shoutBingo(BingoCard card)
     {
-        //Look for player, who won
-        for (BingoCard card : cards)
+        if (card.hasBingo())
         {
-            if (card.hasBingo())
-            {
-                for (BingoListener listener : listeners)
-                {
-                    listener.bingoWon(card);
-                }
+            playerWon(card);
+        }
+    }
 
-                gameState = BingoGameState.FINISHED;
-
-                return true;
-            }
+    private void playerWon(BingoCard winner)
+    {
+        for (BingoListener listener : listeners)
+        {
+            listener.bingoWon(winner);
         }
 
-        return false;
+        gameState = BingoGameState.FINISHED;
     }
 
     public void nextPlayer()
     {
         currentRoundPlayerIndex++;
-        
+
         if (currentRoundPlayerIndex >= cards.size())
         {
             dice();
         }
         else
         {
-            //Gibt es Bingo?
-            if (checkIfPlayerWon())
-            {
-                return;
-            }
-
-            //Kein Bingo
             BingoCard player = cards.get(currentRoundPlayerIndex);
 
             for (BingoListener listener : listeners)
@@ -107,6 +96,13 @@ public class BingoGame
             if (!player.isHuman())
             {
                 player.markAll();
+
+                if (player.hasBingo())
+                {
+                    playerWon(player);
+                    return;
+                }
+
                 nextPlayer();
             }
         }
