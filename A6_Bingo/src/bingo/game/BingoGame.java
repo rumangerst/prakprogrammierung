@@ -4,24 +4,30 @@
  */
 package bingo.game;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
+import javax.swing.Timer;
 
 /**
  *
  * @author ju39gox
  */
-public class BingoGame
+public class BingoGame implements ActionListener
 {
 
     public static final Random RANDOM = new Random();
+    public static final int BINGO_TURN_TIME = 5;
+
     private ArrayList<BingoListener> listeners;
-    private ArrayList<Integer> existingCardFieldNumbers;
     private BingoGameState gameState;
     private ArrayList<BingoCard> cards;
-    private int currentRoundPlayerIndex;
-    private int currentNumber;
+
+    private Timer turnTimer;
+
+    private int turnTimeLeft;
+    private int dicedNumber;
 
     public BingoGame()
     {
@@ -29,8 +35,9 @@ public class BingoGame
 
         gameState = BingoGameState.NOT_STARTED;
         cards = new ArrayList<>();
-        currentRoundPlayerIndex = -1;
-        existingCardFieldNumbers = new ArrayList<>();
+        turnTimer = new Timer(1000, this);
+        turnTimer.setActionCommand("TURN_SECOND_PASSED");
+        turnTimeLeft = 0;
     }
 
     public void startGame()
@@ -47,15 +54,14 @@ public class BingoGame
 
     private void dice()
     {
-        currentRoundPlayerIndex = -1;
-        currentNumber = RANDOM.nextInt(75) + 1;
+        dicedNumber = RANDOM.nextInt(75) + 1;
 
         for (BingoListener listener : listeners)
         {
-            listener.bingoDiced(currentNumber);
+            listener.bingoDiced(dicedNumber);
         }
 
-        nextPlayer();
+        turn();
     }
 
     public void shoutBingo(BingoCard card)
@@ -75,36 +81,65 @@ public class BingoGame
 
         gameState = BingoGameState.FINISHED;
     }
-
-    public void nextPlayer()
+    
+    private void turn()
     {
-        currentRoundPlayerIndex++;
-
-        if (currentRoundPlayerIndex >= cards.size())
+        /**
+         * Start timeout
+         */
+        turnTimeLeft = BINGO_TURN_TIME;
+        checkTurnTimer();
+    }
+    
+    /**
+     * Führt Zug der KI aus
+     */
+    private void aiTurn()
+    {       
+        for (BingoCard player : cards)
         {
-            dice();
+            if (!player.isHuman())
+            {
+                player.markCurrentNumber();
+                shoutBingo(player);
+            }
+        }
+    }
+
+    private void checkTurnTimer()
+    {
+        if (gameState != BingoGameState.RUNNING)
+        {
+            return;
+        }
+
+        if (turnTimeLeft >= 0)
+        {            
+            for (BingoListener listener : listeners)
+            {
+                listener.bingoTurn(turnTimeLeft);
+            }
+            
+            /**
+             * KI soll in den letzten 2 Sekunden ankreuzen - simuliere 'nachdenken'
+             */
+            if(turnTimeLeft == 2)
+            {
+                aiTurn();
+            }
+
+            turnTimeLeft--;
+
+            turnTimer.restart();
         }
         else
         {
-            BingoCard player = cards.get(currentRoundPlayerIndex);
-
             for (BingoListener listener : listeners)
             {
-                listener.bingoPlayerTurn(player);
+                listener.bingoTurnTimeout();
             }
 
-            if (!player.isHuman())
-            {
-                player.markAll();
-
-                if (player.hasBingo())
-                {
-                    playerWon(player);
-                    return;
-                }
-
-                nextPlayer();
-            }
+            dice();
         }
     }
 
@@ -153,36 +188,20 @@ public class BingoGame
 
     public int getCurrentNumber()
     {
-        return currentNumber;
-    }
-
-    public BingoCard getCurrentPlayer()
-    {
-        if (currentRoundPlayerIndex < 0 || currentRoundPlayerIndex >= cards.size())
-        {
-            return null;
-        }
-
-        return cards.get(currentRoundPlayerIndex);
-    }
-
-    public int getCardFieldNumber()
-    {
-        int random = 0;
-
-        do
-        {
-            random = 1 + RANDOM.nextInt(75);
-        }
-        while (existingCardFieldNumbers.contains(random));
-
-        existingCardFieldNumbers.add(random);
-
-        return random;
+        return dicedNumber;
     }
 
     public BingoGameState getState()
     {
         return gameState;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getActionCommand().equals("TURN_SECOND_PASSED"))
+        {
+            checkTurnTimer();
+        }
     }
 }

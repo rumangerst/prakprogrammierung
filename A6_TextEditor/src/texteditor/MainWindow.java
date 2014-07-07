@@ -119,7 +119,6 @@ public class MainWindow extends JFrame implements WindowListener, DocumentListen
         currentFile = null;
         currentFileEdited = false;
 
-
         updateWindowTitle();
 
         return true;
@@ -142,7 +141,13 @@ public class MainWindow extends JFrame implements WindowListener, DocumentListen
 
                     while ((line = rd.readLine()) != null)
                     {
+                        text.append('\n');
                         text.append(line);
+                    }
+                    
+                    if(text.length() != 0)
+                    {
+                        text.delete(0, 1);
                     }
 
                     rd.close();
@@ -150,6 +155,8 @@ public class MainWindow extends JFrame implements WindowListener, DocumentListen
                     currentTextEditor.setText(text.toString());
                     currentFileEdited = false;
                     currentFile = dlg.getSelectedFile();
+
+                    updateWindowTitle();
 
                 }
                 catch (FileNotFoundException ex)
@@ -177,6 +184,8 @@ public class MainWindow extends JFrame implements WindowListener, DocumentListen
 
                 currentFile = file;
                 currentFileEdited = false;
+
+                updateWindowTitle();
             }
             catch (IOException ex)
             {
@@ -188,21 +197,19 @@ public class MainWindow extends JFrame implements WindowListener, DocumentListen
             JOptionPane.showMessageDialog(this, "File is NULL!");
         }
     }
-    
+
     public void saveFileAs()
     {
-        if (currentFile == null)
-        {
-            JFileChooser dlg = new JFileChooser();
 
-            if (dlg.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
-            {
-                currentFile = dlg.getSelectedFile();
-            }
-            else
-            {
-                return;
-            }
+        JFileChooser dlg = new JFileChooser();
+
+        if (dlg.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+        {
+            currentFile = dlg.getSelectedFile();
+        }
+        else
+        {
+            return;
         }
 
         saveFile(currentFile);
@@ -322,21 +329,21 @@ public class MainWindow extends JFrame implements WindowListener, DocumentListen
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if(e.getActionCommand().equals("NEW_FILE"))
+        if (e.getActionCommand().equals("NEW_FILE"))
         {
             requestCloseFile();
         }
-        else if(e.getActionCommand().equals("OPEN_FILE"))
+        else if (e.getActionCommand().equals("OPEN_FILE"))
         {
             openFile();
         }
-        else if(e.getActionCommand().equals("SAVE_FILE"))
+        else if (e.getActionCommand().equals("SAVE_FILE"))
         {
             saveFile();
         }
-        else if(e.getActionCommand().equals("SAVE_FILE_AS"))
+        else if (e.getActionCommand().equals("SAVE_FILE_AS"))
         {
-            
+            saveFileAs();
         }
     }
 }

@@ -4,6 +4,8 @@
  */
 package bingo.game;
 
+import static bingo.game.BingoGame.RANDOM;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -12,6 +14,8 @@ import java.util.Random;
  */
 public class BingoCard
 {
+
+    private ArrayList<Integer> existingCardFieldNumbers;
     private BingoGame game;
     private String name;
     private boolean isHuman;
@@ -20,6 +24,7 @@ public class BingoCard
 
     public BingoCard(String name, boolean isHuman, BingoGame game)
     {
+        this.existingCardFieldNumbers = new ArrayList<>();
         this.game = game;
         this.isHuman = isHuman;
         this.name = name;
@@ -31,10 +36,26 @@ public class BingoCard
         {
             for (int y = 0; y < 5; y++)
             {
-                field[x][y] = game.getCardFieldNumber();
+                field[x][y] = getCardFieldNumber();
                 strikes[x][y] = false;
             }
         }
+
+        /**
+         * Testfunktion für 'Bingo' button
+         */
+        /*
+         if(isHuman)
+         {
+         for(int x = 1; x < 4; x++)
+         {
+         for (int y = 1; y < 4;y++)
+         {
+         strikes[x][y] = true;
+         }
+         }
+         }
+         */
     }
 
     public boolean isHuman()
@@ -76,13 +97,13 @@ public class BingoCard
         return false;
     }
 
-    public void markAll()
+    public void markCurrentNumber()
     {
-        if(game.getCurrentPlayer() != this)
-            throw new InvalidPlayerActionException("It's not this player's turn!");
-        if(game.getState() != BingoGameState.RUNNING)
+        if (game.getState() != BingoGameState.RUNNING)
+        {
             throw new InvalidPlayerActionException("Game is not running!");
-        
+        }
+
         for (int x = 0; x < 5; x++)
         {
             for (int y = 0; y < 5; y++)
@@ -95,13 +116,13 @@ public class BingoCard
         }
     }
 
-    public void mark(int x, int y)
+    public void markCurrentNumberAt(int x, int y)
     {
-        if(game.getCurrentPlayer() != this)
-            throw new InvalidPlayerActionException("It's not this player's turn!");
-        if(game.getState() != BingoGameState.RUNNING)
+        if (game.getState() != BingoGameState.RUNNING)
+        {
             throw new InvalidPlayerActionException("Game is not running!");
-        
+        }
+
         if (getValueAt(x, y) == game.getCurrentNumber())
         {
             strikes[x][y] = true;
@@ -157,15 +178,12 @@ public class BingoCard
             for (int xy = 0; xy < 5; xy++)
             {
 
-
-
                 row &= isMarked(xy, xy);
 
                 if (!row)
                 {
                     break;
                 }
-
 
             }
             if (row)
@@ -186,7 +204,6 @@ public class BingoCard
                     break;
                 }
 
-
             }
             if (row)
             {
@@ -195,5 +212,20 @@ public class BingoCard
         }
 
         return false;
+    }
+
+    private int getCardFieldNumber()
+    {
+        int random = 0;
+
+        do
+        {
+            random = 1 + RANDOM.nextInt(75);
+        }
+        while (existingCardFieldNumbers.contains(random));
+
+        existingCardFieldNumbers.add(random);
+
+        return random;
     }
 }

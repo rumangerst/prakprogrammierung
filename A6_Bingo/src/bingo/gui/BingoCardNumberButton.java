@@ -38,7 +38,7 @@ public class BingoCardNumberButton extends JButton implements BingoListener, Act
         this.playerName = playerName;
         this.bingoX = x;
         this.bingoY = y;
-        
+
         game.addBingoListener(this);
 
         this.setEnabled(false);
@@ -58,15 +58,24 @@ public class BingoCardNumberButton extends JButton implements BingoListener, Act
     }
 
     @Override
-    public void bingoPlayerTurn(BingoCard player)
+    public void bingoTurn(int secondsLeft)
     {
-        this.setEnabled(player.isHuman() && player == getPlayer());
+        this.setEnabled(getPlayer().isHuman());
+        repaint();
+    }
+
+    @Override
+    public void bingoTurnTimeout()
+    {
+        this.setEnabled(false);
+        repaint();
     }
 
     @Override
     public void bingoWon(BingoCard player)
     {
         this.setEnabled(false);
+        repaint();
     }
 
     @Override
@@ -74,7 +83,7 @@ public class BingoCardNumberButton extends JButton implements BingoListener, Act
     {
         if (e.getActionCommand().equals("MARK"))
         {
-            getPlayer().mark(bingoX, bingoY);
+            getPlayer().markCurrentNumberAt(bingoX, bingoY);
             repaint();
         }
     }
@@ -86,9 +95,9 @@ public class BingoCardNumberButton extends JButton implements BingoListener, Act
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        boolean visibleNumbers = (getPlayer().isHuman() && getPlayer() == game.getCurrentPlayer()) || game.getState() == BingoGameState.FINISHED;
 
+        boolean visibleNumbers = getPlayer().isHuman() || game.getState() == BingoGameState.FINISHED;
+     
         /**
          * Draw text
          */
@@ -99,14 +108,13 @@ public class BingoCardNumberButton extends JButton implements BingoListener, Act
         }
 
         g2.setColor(Color.GRAY);
-        
+
         Font numberFont = new Font(Font.DIALOG, Font.PLAIN, Math.min(getWidth(), getHeight()) / 2);
-        FontMetrics metrics = g2.getFontMetrics(numberFont);       
-        
+        FontMetrics metrics = g2.getFontMetrics(numberFont);
+
         g2.setFont(numberFont);
         g2.drawString(number, getWidth() / 2 - metrics.stringWidth(number) / 2, getHeight() / 2 + metrics.getAscent() / 2);
 
-        
         /**
          * Draw cross/mark
          */

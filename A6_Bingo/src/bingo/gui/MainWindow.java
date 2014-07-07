@@ -8,19 +8,16 @@ import bingo.game.BingoCard;
 import bingo.game.BingoGame;
 import bingo.game.BingoListener;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.HashMap;
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 /**
  *
@@ -31,9 +28,10 @@ public class MainWindow extends JFrame implements BingoListener, ComponentListen
 
     private BingoGame currentGame;
     private HashMap<String, BingoCardPanel> uiPlayerCards;
-    
+
     private JPanel uiBingoCardContainer;
     private JLabel uiGameStatusLabel;
+    private JProgressBar uiBingoTurnTimeProgress;
 
     public MainWindow()
     {
@@ -49,15 +47,19 @@ public class MainWindow extends JFrame implements BingoListener, ComponentListen
         this.setSize(800, 600);
         this.setTitle("Bingo");
         this.addComponentListener(this);
-        
+
         this.setLayout(new BorderLayout());
-        
+
         uiGameStatusLabel = new JLabel("Ready.", JLabel.CENTER);
         uiGameStatusLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
         add(uiGameStatusLabel, BorderLayout.NORTH);
-        
+
         uiBingoCardContainer = new JPanel(new GridBagLayout());
         add(uiBingoCardContainer, BorderLayout.CENTER);
+        
+        uiBingoTurnTimeProgress = new JProgressBar(JProgressBar.HORIZONTAL, 0, BingoGame.BINGO_TURN_TIME);
+        uiBingoTurnTimeProgress.setStringPainted(true);
+        add(uiBingoTurnTimeProgress, BorderLayout.SOUTH);
     }
 
     public void newGame()
@@ -66,10 +68,10 @@ public class MainWindow extends JFrame implements BingoListener, ComponentListen
 
         currentGame = new BingoGame();
         currentGame.addBingoListener(this);
-        
+
         addPlayer("Horst", true);
         addPlayer("GlaDOS", false);
-        
+
         currentGame.startGame();
 
     }
@@ -78,16 +80,15 @@ public class MainWindow extends JFrame implements BingoListener, ComponentListen
     {
         currentGame.addPlayer(name, isHuman);
 
-        BingoCardPanel card = new BingoCardPanel(currentGame, name);      
-     
-        
+        BingoCardPanel card = new BingoCardPanel(currentGame, name);
+
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = uiPlayerCards.size();
         c.gridy = 0;
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        
+
         uiBingoCardContainer.add(card, c);
 
         uiPlayerCards.put(name, card);
@@ -96,28 +97,35 @@ public class MainWindow extends JFrame implements BingoListener, ComponentListen
     @Override
     public void bingoDiced(int number)
     {
-        uiGameStatusLabel.setText("Es wurde eine " + number  + " gewürfelt!");
+        uiGameStatusLabel.setText("Es wurde eine " + number + " gewürfelt!");
     }
 
     @Override
-    public void bingoPlayerTurn(BingoCard player)
+    public void bingoTurn(int secondsLeft)
+    {
+        uiBingoTurnTimeProgress.setValue(secondsLeft);
+        uiBingoTurnTimeProgress.setString("Noch " + secondsLeft + "s");
+    }
+
+    @Override
+    public void bingoTurnTimeout()
     {
     }
 
     @Override
     public void bingoWon(BingoCard player)
     {
-       uiGameStatusLabel.setText("BINGO! " + player.getName() + " hat gewonnen!");
+        uiGameStatusLabel.setText("BINGO! " + player.getName() + " hat gewonnen!");
     }
 
     @Override
     public void componentResized(ComponentEvent e)
-    {       
+    {
     }
 
     @Override
     public void componentMoved(ComponentEvent e)
-    {       
+    {
     }
 
     @Override
@@ -127,6 +135,7 @@ public class MainWindow extends JFrame implements BingoListener, ComponentListen
 
     @Override
     public void componentHidden(ComponentEvent e)
-    {       
+    {
     }
+
 }

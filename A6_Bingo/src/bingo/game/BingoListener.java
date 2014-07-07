@@ -11,6 +11,7 @@ package bingo.game;
 public interface BingoListener
 {
     public void bingoDiced(int number);
-    public void bingoPlayerTurn(BingoCard player);
+    public void bingoTurn(int secondsLeft);
+    public void bingoTurnTimeout();
     public void bingoWon(BingoCard player);
 }

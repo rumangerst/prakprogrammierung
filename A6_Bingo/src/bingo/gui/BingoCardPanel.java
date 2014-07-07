@@ -32,7 +32,6 @@ public class BingoCardPanel extends JPanel implements BingoListener, ActionListe
     private BingoGame game;
     private String playerName;
     private BingoCardNumberButton[][] uiBingoFields;
-    private JButton uiBingoFinishTurn;
     private JButton uiBingoShoutBingo;
 
     public BingoCardPanel(BingoGame game, String playerName)
@@ -90,7 +89,7 @@ public class BingoCardPanel extends JPanel implements BingoListener, ActionListe
                 this.add(button, c);
             }
         }
-        
+
         //Add line
         c.gridx = 0;
         c.gridy = 6;
@@ -98,23 +97,11 @@ public class BingoCardPanel extends JPanel implements BingoListener, ActionListe
         c.weighty = 0;
         c.gridwidth = GridBagConstraints.RELATIVE;
         add(Box.createVerticalStrut(5), c);
-        
 
-        //Add 'finished' button
-        uiBingoFinishTurn = new JButton("Fertig");
-        c.weightx = 0;
-        c.weighty = 0;
-        c.gridx = 1;
-        c.gridy = 7;
-        c.gridwidth = 3;
-        uiBingoFinishTurn.addActionListener(this);
-        uiBingoFinishTurn.setActionCommand("FINISH_TURN");
-        add(uiBingoFinishTurn, c);
-        
         //Add 'bingo!' button
         uiBingoShoutBingo = new JButton("Bingo!!!");
-        c.gridx = 4;
-        c.gridwidth = 2;
+        c.gridx = 1;
+        c.gridwidth = 5;
         uiBingoShoutBingo.addActionListener(this);
         uiBingoShoutBingo.setActionCommand("SHOUT_BINGO");
         add(uiBingoShoutBingo, c);
@@ -126,30 +113,25 @@ public class BingoCardPanel extends JPanel implements BingoListener, ActionListe
     }
 
     @Override
-    public void bingoPlayerTurn(BingoCard player)
+    public void bingoTurn(int secondsLeft)
     {
-        if (player.getName().equals(playerName))
-        {
-            this.setEnabled(true);
+        this.setEnabled(true);
 
-            if (player.isHuman())
-            {
-                uiBingoFinishTurn.setVisible(true);
-                uiBingoShoutBingo.setVisible(true);
-            }
-            else
-            {
-                uiBingoFinishTurn.setVisible(false);
-                uiBingoShoutBingo.setVisible(false);
-            }
+        if (getPlayer().isHuman())
+        {
+            uiBingoShoutBingo.setVisible(true);
         }
         else
         {
-            this.setEnabled(false);
-            uiBingoFinishTurn.setVisible(false);
             uiBingoShoutBingo.setVisible(false);
         }
+    }
 
+    @Override
+    public void bingoTurnTimeout()
+    {
+        this.setEnabled(false);
+        uiBingoShoutBingo.setVisible(false);
     }
 
     @Override
@@ -161,11 +143,7 @@ public class BingoCardPanel extends JPanel implements BingoListener, ActionListe
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getActionCommand().equals("FINISH_TURN"))
-        {
-            game.nextPlayer();
-        }
-        else if(e.getActionCommand().equals("SHOUT_BINGO"))
+        if (e.getActionCommand().equals("SHOUT_BINGO"))
         {
             game.shoutBingo(getPlayer());
         }
@@ -174,8 +152,8 @@ public class BingoCardPanel extends JPanel implements BingoListener, ActionListe
     @Override
     public void setBounds(int x, int y, int w, int h)
     {
-        int size = Math.min(w, h);        
-        
+        int size = Math.min(w, h);
+
         super.setBounds(x, y, size, size);
     }
 }
